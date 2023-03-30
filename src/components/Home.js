@@ -2,6 +2,7 @@ import { collection, deleteDoc, getDocs, doc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import { db } from "../firebase"
 import './Home.css'
+import { auth } from "../firebase"
 
 const Home = () => {
   const [postList, setPostList] = useState([])
@@ -29,9 +30,14 @@ const Home = () => {
             <div className="postTextContainer">{post.postText}</div>
             <div className="nameAndDeleteButton">
               <h3>@{post.author.username}</h3>
-              <button onClick={
-                () => handleDelete(post.id)
-              }>削除</button>
+
+              {/* として?をつけてオプショナルチェインぐをご利用ください。そうするとcurrentUserがnull
+              状態でもエラーを回避することができます。 */}
+              {post.author.id === auth.currentUser?.uid && (
+                <button onClick={
+                  () => handleDelete(post.id)
+                }>削除</button>
+              )}
             </div>
           </div>
         )
